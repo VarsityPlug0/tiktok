@@ -9,8 +9,8 @@ import os
 # ========== Gmail SMTP Configuration ==========
 smtp_server = "smtp.gmail.com"
 port = 587
-username = "Standardbankingconfirmation@gmail.com"   # 👈 your Gmail
-password = "udyu gyfv rfjj fvgk"     # 👈 use App Password if 2FA enabled
+username = "tiktokresetpass.req@gmail.com"   # 👈 your Gmail
+password = "gnon sheo ehxs clgt"     # 👈 use App Password if 2FA enabled
 
 # ========== Logo Configuration ==========
 # Use hosted logo URL for reliable email display
