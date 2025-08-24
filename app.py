@@ -207,8 +207,8 @@ if __name__ == '__main__':
     # Ensure templates directory exists
     os.makedirs('templates', exist_ok=True)
     
-    logger.info("Starting TikTok Phishing Simulation Server")
-    logger.info("Admin Dashboard: http://localhost:5000/admin")
-    logger.info("TikTok Login Page: http://localhost:5000/tiktok-login")
+    # Get port from environment variable (Render sets this)
+    port = int(os.environ.get('PORT', 5000))
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Use 0.0.0.0 to bind to all available network interfaces
+    app.run(host='0.0.0.0', port=port, debug=False)
