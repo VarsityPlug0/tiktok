@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Email Tester</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .tiktok-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .tiktok-logo img {
+            height: 80px;
+            width: auto;
+            max-width: 250px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 18px;
+        }
+        
+        .form-section {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            color: #00f2ea;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00f2ea;
+        }
+        
+        .email-type-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .email-type-option {
+            flex: 1;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .email-type-option:hover {
+            border-color: #00f2ea;
+            background-color: #3a3a3a;
+        }
+        
+        .email-type-option.selected {
+            border-color: #00f2ea;
+            background-color: #1a3a3a;
+        }
+        
+        .email-type-option h3 {
+            margin: 0 0 10px 0;
+            color: #00f2ea;
+        }
+        
+        .email-type-option p {
+            margin: 0;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+        
+        .send-button {
+            width: 100%;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #00f2ea 0%, #ff0050 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 234, 0.3);
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 234, 0.4);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .result.success {
+            background-color: #1a3a1a;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+        }
+        
+        .result.error {
+            background-color: #3a1a1a;
+            border: 2px solid #ff0050;
+            color: #ff0050;
+        }
+        
+        .preview-section {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .preview-title {
+            color: #00f2ea;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .preview-content {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #3a3a3a;
+        }
+        
+        .preview-email {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .preview-email h4 {
+            margin: 0 0 10px 0;
+            color: #00f2ea;
+        }
+        
+        .preview-email p {
+            margin: 5px 0;
+            color: #e0e0e0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .email-type-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="tiktok-logo">
+                <img src="/tiktok-logo" alt="TikTok Email Tester">
+            </div>
+            <div class="subtitle">Test TikTok Security Email Templates</div>
+        </div>
+        
+        <!-- Email Form -->
+        <div class="form-section">
+            <div class="form-title">📧 Send TikTok Email</div>
+            
+            <!-- Email Type Selection -->
+            <div class="email-type-selector">
+                <div class="email-type-option" data-type="security_alert">
+                    <h3>🔐 Security Alert</h3>
+                    <p>New device login detected</p>
+                </div>
+                <div class="email-type-option" data-type="verification_required">
+                    <h3>⚠️ Verification Required</h3>
+                    <p>Account verification needed</p>
+                </div>
+            </div>
+            
+            <!-- Form Fields -->
+            <div class="form-group">
+                <label for="email">Recipient Email:</label>
+                <input type="email" id="email" placeholder="Enter recipient email address" value="moneybman0@gmail.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Enter TikTok username" value="thee_great_bevan_mkhabele">
+            </div>
+            
+            <button class="send-button" onclick="sendEmail()">🚀 Send TikTok Email</button>
+            
+            <!-- Result Display -->
+            <div id="result" class="result" style="display: none;"></div>
+        </div>
+        
+        <!-- Email Preview -->
+        <div class="preview-section">
+            <div class="preview-title">📱 Email Preview</div>
+            <div class="preview-content">
+                <div class="preview-email">
+                    <h4>🔐 Security Alert Email</h4>
+                    <p><strong>Subject:</strong> TikTok: Security Alert - New Device Login Detected</p>
+                    <p><strong>Features:</strong> Dark theme, device info, location, security tips</p>
+                    <p><strong>Style:</strong> Professional TikTok branding with cyan/red gradient</p>
+                </div>
+                
+                <div class="preview-email">
+                    <h4>⚠️ Verification Required Email</h4>
+                    <p><strong>Subject:</strong> TikTok: Account Verification Required - Immediate Action Needed</p>
+                    <p><strong>Features:</strong> Urgent banner, verification button, security notice</p>
+                    <p><strong>Style:</strong> High-priority design with red accents</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Email type selection
+        document.querySelectorAll('.email-type-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.email-type-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                // Add selected class to clicked option
+                this.classList.add('selected');
+            });
+        });
+        
+        // Set default selection
+        document.querySelector('[data-type="security_alert"]').classList.add('selected');
+        
+        // Send email function
+        async function sendEmail() {
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const selectedType = document.querySelector('.email-type-option.selected').dataset.type;
+            
+            if (!email || !username) {
+                showResult('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Disable button and show loading
+            const button = document.querySelector('.send-button');
+            button.disabled = true;
+            button.textContent = '📤 Sending...';
+            
+            try {
+                const response = await fetch('/send-tiktok-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        type: selectedType,
+                        username: username
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(`✅ ${data.message}`, 'success');
+                } else {
+                    showResult(`❌ ${data.message}`, 'error');
+                }
+                
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = '🚀 Send TikTok Email';
+            }
+        }
+        
+        // Show result function
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

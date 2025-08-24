@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Email Sender</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2a2a2a;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .tiktok-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .tiktok-logo img {
+            height: 80px;
+            width: auto;
+            max-width: 250px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 18px;
+        }
+        
+        .form-section {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            color: #00f2ea;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-title::before {
+            content: "📧";
+            margin-right: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #00f2ea;
+        }
+        
+        .template-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .template-option {
+            flex: 1;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .template-option:hover {
+            border-color: #00f2ea;
+            background-color: #3a3a3a;
+        }
+        
+        .template-option.selected {
+            border-color: #00f2ea;
+            background-color: #1a3a3a;
+        }
+        
+        .template-option h3 {
+            margin: 0 0 10px 0;
+            color: #00f2ea;
+        }
+        
+        .template-option p {
+            margin: 0;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+        
+        .send-button {
+            width: 100%;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #00f2ea 0%, #ff0050 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 234, 0.3);
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 234, 0.4);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .result.success {
+            background-color: #1a3a1a;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+        }
+        
+        .result.error {
+            background-color: #3a1a1a;
+            border: 2px solid #ff0050;
+            color: #ff0050;
+        }
+        
+        .preview-section {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .preview-title {
+            color: #00f2ea;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .preview-content {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #3a3a3a;
+        }
+        
+        .preview-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #1e1e1e;
+            border-radius: 6px;
+        }
+        
+        .preview-label {
+            color: #00f2ea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .preview-value {
+            color: #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .template-selector {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="tiktok-logo">
+                <img src="/logo/logo.jpg" alt="Custom Email Sender">
+            </div>
+            <div class="subtitle">Customize and Send Professional TikTok Emails</div>
+        </div>
+        
+        <!-- Email Form -->
+        <div class="form-section">
+            <div class="form-title">📧 Email Configuration</div>
+            
+            <!-- Email Template Selection -->
+            <div class="template-selector">
+                <div class="template-option" data-template="tiktok_security">
+                    <h3>🔐 TikTok Security Alert</h3>
+                    <p>Professional security notification</p>
+                </div>
+                <div class="template-option" data-template="tiktok_verification">
+                    <h3>⚠️ TikTok Verification</h3>
+                    <p>Account verification required</p>
+                </div>
+                <div class="template-option" data-template="custom">
+                    <h3>✉️ Custom Email</h3>
+                    <p>Fully customizable content</p>
+                </div>
+            </div>
+            
+            <!-- Form Fields -->
+            <div class="form-grid">
+                <!-- SMTP Configuration -->
+                <div class="form-group">
+                    <label for="smtp_server">SMTP Server:</label>
+                    <input type="text" id="smtp_server" value="smtp.gmail.com" placeholder="smtp.gmail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="smtp_port">SMTP Port:</label>
+                    <input type="number" id="smtp_port" value="587" placeholder="587">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sender_email">Sender Email:</label>
+                    <input type="email" id="sender_email" value="your-email@gmail.com" placeholder="your-email@gmail.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="sender_password">App Password:</label>
+                    <input type="password" id="sender_password" placeholder="Enter your Gmail App Password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipient_email">Recipient Email:</label>
+                    <input type="email" id="recipient_email" value="recipient@example.com" placeholder="recipient@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email_subject">Email Subject:</label>
+                    <input type="text" id="email_subject" value="TikTok: Security Alert - New Device Login Detected" placeholder="Enter email subject">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="username">Username (for greeting):</label>
+                    <input type="text" id="username" value="user" placeholder="Enter username for greeting">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="custom_message">Custom Message (optional):</label>
+                    <textarea id="custom_message" placeholder="Enter your custom message here..."></textarea>
+                </div>
+            </div>
+            
+            <button class="send-button" onclick="sendEmail()">🚀 Send Email</button>
+            
+            <!-- Result Display -->
+            <div id="result" class="result" style="display: none;"></div>
+        </div>
+        
+        <!-- Email Preview -->
+        <div class="preview-section">
+            <div class="preview-title">📱 Email Preview</div>
+            <div class="preview-content">
+                <div class="preview-item">
+                    <div class="preview-label">From:</div>
+                    <div class="preview-value" id="preview-from">your-email@gmail.com</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">To:</div>
+                    <div class="preview-value" id="preview-to">recipient@example.com</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Subject:</div>
+                    <div class="preview-value" id="preview-subject">TikTok: Security Alert - New Device Login Detected</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Template:</div>
+                    <div class="preview-value" id="preview-template">TikTok Security Alert</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Logo:</div>
+                    <div class="preview-value">✅ Will be embedded as hosted image</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Template selection
+        document.querySelectorAll('.template-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.template-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                updatePreview();
+            });
+        });
+        
+        // Set default selection
+        document.querySelector('[data-template="tiktok_security"]').classList.add('selected');
+        
+        // Update preview when inputs change
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+        
+        // Update preview function
+        function updatePreview() {
+            const selectedTemplate = document.querySelector('.template-option.selected').dataset.template;
+            const senderEmail = document.getElementById('sender_email').value;
+            const recipientEmail = document.getElementById('recipient_email').value;
+            const subject = document.getElementById('email_subject').value;
+            
+            document.getElementById('preview-from').textContent = senderEmail;
+            document.getElementById('preview-to').textContent = recipientEmail;
+            document.getElementById('preview-subject').textContent = subject;
+            
+            let templateName = 'Custom Email';
+            if (selectedTemplate === 'tiktok_security') templateName = 'TikTok Security Alert';
+            else if (selectedTemplate === 'tiktok_verification') templateName = 'TikTok Verification Required';
+            
+            document.getElementById('preview-template').textContent = templateName;
+        }
+        
+        // Initialize preview
+        updatePreview();
+        
+        // Send email function
+        async function sendEmail() {
+            const selectedTemplate = document.querySelector('.template-option.selected').dataset.template;
+            const smtpServer = document.getElementById('smtp_server').value;
+            const smtpPort = document.getElementById('smtp_port').value;
+            const senderEmail = document.getElementById('sender_email').value;
+            const senderPassword = document.getElementById('sender_password').value;
+            const recipientEmail = document.getElementById('recipient_email').value;
+            const subject = document.getElementById('email_subject').value;
+            const username = document.getElementById('username').value;
+            const customMessage = document.getElementById('custom_message').value;
+            
+            if (!senderEmail || !senderPassword || !recipientEmail || !subject) {
+                showResult('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Disable button and show loading
+            const button = document.querySelector('.send-button');
+            button.disabled = true;
+            button.textContent = '📤 Sending...';
+            
+            try {
+                const response = await fetch('/send-custom-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        template: selectedTemplate,
+                        smtp_server: smtpServer,
+                        smtp_port: parseInt(smtpPort),
+                        sender_email: senderEmail,
+                        sender_password: senderPassword,
+                        recipient_email: recipientEmail,
+                        subject: subject,
+                        username: username,
+                        custom_message: customMessage
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(`✅ ${data.message}`, 'success');
+                } else {
+                    showResult(`❌ ${data.message}`, 'error');
+                }
+                
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = '🚀 Send Email';
+            }
+        }
+        
+        // Show result function
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+            
+            // Auto-hide after 8 seconds
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 8000);
+        }
+    </script>
+</body>
+</html>
