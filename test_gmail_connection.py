@@ -8,8 +8,8 @@ import smtplib
 from email.mime.text import MIMEText
 
 # Your Gmail credentials
-username = "Standardbankingconfirmation@gmail.com"
-password = "udyu gyfv rfjj fvgk"
+username = "tiktokresetpass.req@gmail.com"
+password = "gnon sheo ehxs clgt"
 
 print("🔍 Gmail SMTP Connection Test")
 print("=" * 40)

